@@ -186,7 +186,7 @@ void CoreGame(GameFlow tester)
 			if (moves >= 9)
 			{
 				next = true;
-				printf("DRAW GAME");
+				printf("DRAW GAME");//Draw game case
 				bi[0][0].render(tester);
 				bi[0][1].render(tester);
 				bi[0][2].render(tester);
