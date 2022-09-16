@@ -105,11 +105,16 @@ void CoreGame(GameFlow tester)
 	 Tile(tester, 340, 535), Tile(tester, 680, 535) };
 	bool next = false;
 	bool state = true;
+	int moves = 0;
 	int temp1;
 	int temp2;
 	int iterator = 0;
 	Textures EndScreen;
+	Textures BadEnd;
+	Textures DrawEnd;
 	EndScreen.loadTex("GameOver.png", tester);
+	BadEnd.loadTex("LoseScreen.png", tester);
+	DrawEnd.loadTex("DrawScreen.png", tester);
 	for (int col = 0; col < 3; col++)
 	{
 		for (int row = 0; row < 3; row++)
@@ -139,11 +144,12 @@ void CoreGame(GameFlow tester)
 			{
 			case SDL_MOUSEBUTTONDOWN: bi[0][0].InputHandle(f, true); bi[0][1].InputHandle(f, true); bi[0][2].InputHandle(f, true);
 				bi[1][0].InputHandle(f, true); bi[1][1].InputHandle(f, true); bi[1][2].InputHandle(f, true); 
-				bi[2][0].InputHandle(f, true); bi[2][1].InputHandle(f, true); bi[2][2].InputHandle(f, true); state = false; break;
+				bi[2][0].InputHandle(f, true); bi[2][1].InputHandle(f, true); bi[2][2].InputHandle(f, true); state = false; moves++; break;
 			}
 		}
 		if (state == false)
 		{
+
 			if (Winner() == true)
 			{
 				next = true;
@@ -174,9 +180,51 @@ void CoreGame(GameFlow tester)
 				int result2 = 0 + (rand() % 3);
 				temp1 = result1;
 				temp2 = result2;
-				cout << "Computer has decided on space " << temp1 << " and " << temp2;
-			} while (bi[temp1][temp2].tileDec != 2);//This AI technically works but it can take an obnoxiously long time to do its move. Not satisfied with it but I'll get back to it
+			} while (bi[temp1][temp2].tileDec != 2 && moves < 9);//This AI technically works but it can take an obnoxiously long time to do its move. Not satisfied with it but I'll get back to it
 			bi[temp1][temp2].InputHandle(f, false);
+			moves++;
+			if (moves >= 9)
+			{
+				next = true;
+				printf("DRAW GAME");//Draw game case
+				bi[0][0].render(tester);
+				bi[0][1].render(tester);
+				bi[0][2].render(tester);
+				bi[1][0].render(tester);
+				bi[1][1].render(tester);
+				bi[1][2].render(tester);
+				bi[2][0].render(tester);
+				bi[2][1].render(tester);
+				bi[2][2].render(tester);
+				SDL_Delay(4000);
+				SDL_RenderClear(tester.mainRender);
+				DrawEnd.render(tester, (0), (0));
+				SDL_RenderPresent(tester.mainRender);
+				SDL_Delay(4000);
+
+				break;
+			}
+			if (Winner() == true)
+			{
+				next = true;
+				printf("GAME OVER");
+				bi[0][0].render(tester);
+				bi[0][1].render(tester);
+				bi[0][2].render(tester);
+				bi[1][0].render(tester);
+				bi[1][1].render(tester);
+				bi[1][2].render(tester);
+				bi[2][0].render(tester);
+				bi[2][1].render(tester);
+				bi[2][2].render(tester);
+				SDL_Delay(4000);
+				SDL_RenderClear(tester.mainRender);
+				BadEnd.render(tester, (0), (0));
+				SDL_RenderPresent(tester.mainRender);
+				SDL_Delay(4000);
+			}
+
+
 			//Random Number generator
 		}
 		
